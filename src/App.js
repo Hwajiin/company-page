@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import { lazy, Suspense } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Spinner from "./components/spinner";
+import Footer from "./layouts/footer";
+import Gnb from "./layouts/gnb";
+import NotFound from "./pages/notFound";
 
-function App() {
+const HomePage = lazy(() => import("./pages/homePage"));
+const CompanyIntroPage = lazy(() => import("./pages/companyIntroPage"));
+
+const App = () => {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <BrowserRouter>
+        <Gnb />
+        <Suspense fallback={<Spinner />}>
+          <Routes>
+            <Route index element={<HomePage />} />
+            <Route path="reports_intro" element={<CompanyIntroPage />} />
+            <Route path="/*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+        <Footer />
+      </BrowserRouter>
     </div>
   );
-}
+};
 
 export default App;
